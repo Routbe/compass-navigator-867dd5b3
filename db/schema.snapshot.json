@@ -2485,7 +2485,7 @@
         {
           "name": "app_email_assignments_source_check",
           "kind": "c",
-          "def": "CHECK ((source = ANY (ARRAY['primary'::text, 'alias'::text])))"
+          "def": "CHECK ((source = ANY (ARRAY['primary'::text, 'alias'::text, 'relay'::text])))"
         }
       ],
       "indexes": [],
