@@ -118,6 +118,7 @@ import { Route as ApiPresenceNowPlayingRouteImport } from './routes/api_.presenc
 import { Route as ApiProfilesCheckHandleRouteImport } from './routes/api_.profiles.check-handle'
 import { Route as ApiPublicAvatarRouteImport } from './routes/api_.public.avatar'
 import { Route as ApiPublicBrandLogoRouteImport } from './routes/api_.public.brand-logo'
+import { Route as ApiPublicEmailForwardRouteImport } from './routes/api_.public.email-forward'
 import { Route as ApiPublicGalleryMediaRouteImport } from './routes/api_.public.gallery-media'
 import { Route as ApiPublicHealthRouteImport } from './routes/api_.public.health'
 import { Route as ApiPublicIntegrationsRouteImport } from './routes/api_.public.integrations'
@@ -767,6 +768,11 @@ const ApiPublicBrandLogoRoute = ApiPublicBrandLogoRouteImport.update({
   path: '/api/public/brand-logo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicEmailForwardRoute = ApiPublicEmailForwardRouteImport.update({
+  id: '/api_/public/email-forward',
+  path: '/api/public/email-forward',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicGalleryMediaRoute = ApiPublicGalleryMediaRouteImport.update({
   id: '/api_/public/gallery-media',
   path: '/api/public/gallery-media',
@@ -1330,6 +1336,7 @@ export interface FileRoutesByFullPath {
   '/api/profiles/check-handle': typeof ApiProfilesCheckHandleRoute
   '/api/public/avatar': typeof ApiPublicAvatarRoute
   '/api/public/brand-logo': typeof ApiPublicBrandLogoRoute
+  '/api/public/email-forward': typeof ApiPublicEmailForwardRoute
   '/api/public/gallery-media': typeof ApiPublicGalleryMediaRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/integrations': typeof ApiPublicIntegrationsRoute
@@ -1518,6 +1525,7 @@ export interface FileRoutesByTo {
   '/api/profiles/check-handle': typeof ApiProfilesCheckHandleRoute
   '/api/public/avatar': typeof ApiPublicAvatarRoute
   '/api/public/brand-logo': typeof ApiPublicBrandLogoRoute
+  '/api/public/email-forward': typeof ApiPublicEmailForwardRoute
   '/api/public/gallery-media': typeof ApiPublicGalleryMediaRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/integrations': typeof ApiPublicIntegrationsRoute
@@ -1711,6 +1719,7 @@ export interface FileRoutesById {
   '/api_/profiles/check-handle': typeof ApiProfilesCheckHandleRoute
   '/api_/public/avatar': typeof ApiPublicAvatarRoute
   '/api_/public/brand-logo': typeof ApiPublicBrandLogoRoute
+  '/api_/public/email-forward': typeof ApiPublicEmailForwardRoute
   '/api_/public/gallery-media': typeof ApiPublicGalleryMediaRoute
   '/api_/public/health': typeof ApiPublicHealthRoute
   '/api_/public/integrations': typeof ApiPublicIntegrationsRoute
@@ -1905,6 +1914,7 @@ export interface FileRouteTypes {
     | '/api/profiles/check-handle'
     | '/api/public/avatar'
     | '/api/public/brand-logo'
+    | '/api/public/email-forward'
     | '/api/public/gallery-media'
     | '/api/public/health'
     | '/api/public/integrations'
@@ -2093,6 +2103,7 @@ export interface FileRouteTypes {
     | '/api/profiles/check-handle'
     | '/api/public/avatar'
     | '/api/public/brand-logo'
+    | '/api/public/email-forward'
     | '/api/public/gallery-media'
     | '/api/public/health'
     | '/api/public/integrations'
@@ -2285,6 +2296,7 @@ export interface FileRouteTypes {
     | '/api_/profiles/check-handle'
     | '/api_/public/avatar'
     | '/api_/public/brand-logo'
+    | '/api_/public/email-forward'
     | '/api_/public/gallery-media'
     | '/api_/public/health'
     | '/api_/public/integrations'
@@ -2444,6 +2456,7 @@ export interface RootRouteChildren {
   ApiProfilesCheckHandleRoute: typeof ApiProfilesCheckHandleRoute
   ApiPublicAvatarRoute: typeof ApiPublicAvatarRoute
   ApiPublicBrandLogoRoute: typeof ApiPublicBrandLogoRoute
+  ApiPublicEmailForwardRoute: typeof ApiPublicEmailForwardRoute
   ApiPublicGalleryMediaRoute: typeof ApiPublicGalleryMediaRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicIntegrationsRoute: typeof ApiPublicIntegrationsRoute
@@ -3271,6 +3284,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/brand-logo'
       fullPath: '/api/public/brand-logo'
       preLoaderRoute: typeof ApiPublicBrandLogoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api_/public/email-forward': {
+      id: '/api_/public/email-forward'
+      path: '/api/public/email-forward'
+      fullPath: '/api/public/email-forward'
+      preLoaderRoute: typeof ApiPublicEmailForwardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api_/public/gallery-media': {
@@ -4134,6 +4154,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiProfilesCheckHandleRoute: ApiProfilesCheckHandleRoute,
   ApiPublicAvatarRoute: ApiPublicAvatarRoute,
   ApiPublicBrandLogoRoute: ApiPublicBrandLogoRoute,
+  ApiPublicEmailForwardRoute: ApiPublicEmailForwardRoute,
   ApiPublicGalleryMediaRoute: ApiPublicGalleryMediaRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicIntegrationsRoute: ApiPublicIntegrationsRoute,

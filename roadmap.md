@@ -13,6 +13,8 @@
 - [x] Round 8: Steam card + CSS effects (STEAM_WEB_API_KEY still to set)
 - [x] Re-import 1:1 from compass-navigator-500baf53, Neon linked in this project
 - [x] Task A: migration 0136 (per-app email choice) applied on Neon
+- [x] Migration 0125: legacy password column dropped on Neon
+- [x] OIDC email broker (RFC-004): per-app email routing + pairwise app IDs
 
 ## Open (handoff round 9)
 - [ ] Task B: inbound OIDC email forwarding (priv-…@mail.rout.be → verified email), migration 0137, webhook, tests
