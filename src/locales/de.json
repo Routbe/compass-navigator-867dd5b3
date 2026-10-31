@@ -1529,5 +1529,7 @@
   "wallet.google": "Google Wallet",
   "wallet.unavailable": "Wallet-Pässe sind noch nicht verfügbar. Lade bis dahin den QR-Code oder die Visitenkarte über das Teilen-Menü herunter.",
   "wallet.partly": "Noch nicht jede Wallet ist verfügbar.",
-  "wallet.failed": "Der Pass konnte nicht erstellt werden. Bitte später erneut versuchen."
+  "wallet.failed": "Der Pass konnte nicht erstellt werden. Bitte später erneut versuchen.",
+  "profile.upcomingEvents": "Kommende Events",
+  "profile.eventDetails": "Details"
 }

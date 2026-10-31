@@ -1529,5 +1529,7 @@
   "wallet.google": "Google Wallet",
   "wallet.unavailable": "Wallet passes are not available yet. Meanwhile, download the QR code or business card from the share menu.",
   "wallet.partly": "Not every wallet is available yet.",
-  "wallet.failed": "The pass could not be created. Please try again later."
+  "wallet.failed": "The pass could not be created. Please try again later.",
+  "profile.upcomingEvents": "Upcoming events",
+  "profile.eventDetails": "Details"
 }

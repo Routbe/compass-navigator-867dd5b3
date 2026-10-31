@@ -1529,5 +1529,7 @@
   "wallet.google": "Google Wallet",
   "wallet.unavailable": "Wallet-passes zijn nog niet beschikbaar. Download intussen de QR-code of het visitekaartje via het deelmenu.",
   "wallet.partly": "Niet elke wallet is al beschikbaar.",
-  "wallet.failed": "De pass kon niet worden aangemaakt. Probeer het later opnieuw."
+  "wallet.failed": "De pass kon niet worden aangemaakt. Probeer het later opnieuw.",
+  "profile.upcomingEvents": "Aankomende evenementen",
+  "profile.eventDetails": "Details"
 }
