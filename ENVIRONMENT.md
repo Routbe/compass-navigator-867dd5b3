@@ -209,4 +209,5 @@ Reuses `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` and `PSP_ENCRYPTION_KEY`. Add
 ## Wallet passes
 - Apple: `APPLE_WALLET_PASS_TYPE_ID`, `APPLE_WALLET_TEAM_ID`, `APPLE_WALLET_CERT_PEM` (Pass Type ID certificate), `APPLE_WALLET_KEY_PEM` (its private key), optional `APPLE_WALLET_KEY_PASSPHRASE`, `APPLE_WALLET_WWDR_PEM` (Apple WWDR G4). PEM values may use `\n` escapes.
 - Google: `GOOGLE_WALLET_ISSUER_ID`, `GOOGLE_WALLET_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_WALLET_PRIVATE_KEY` (service account PKCS#8 key).
-- Missing or partial values switch that wallet off; the share menu shows a friendly fallback.
+- Also accepted: `APPLE_PASS_TYPE_ID`, `APPLE_TEAM_ID`, `APPLE_PASS_CERTIFICATE`, `APPLE_PASS_KEY`, `APPLE_PASS_KEY_PASSPHRASE`, `APPLE_WWDR_CERTIFICATE`, and `GOOGLE_WALLET_SERVICE_ACCOUNT` (the full service-account JSON) instead of the Google email + key.
+- Missing or partial values switch that wallet off: the share menu shows a friendly fallback and `/api/wallet/...` answers 503 with an unsigned demo payload.
