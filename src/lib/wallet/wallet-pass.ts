@@ -20,14 +20,45 @@ export type WalletSubject = {
 export type WalletStatus = { apple: boolean; google: boolean };
 
 type Env = Record<string, string | undefined>;
-const has = (env: Env, k: string) => Boolean(env[k]?.trim());
+const pick = (env: Env, ...keys: string[]) => keys.map((k) => env[k]?.trim()).find((v) => !!v) ?? "";
+
+export type AppleWalletConfig = { passTypeId: string; teamId: string; certPem: string; keyPem: string; passphrase: string; wwdrPem: string };
+export type GoogleWalletConfig = { issuerId: string; serviceAccountEmail: string; privateKey: string };
+
+/** Resolves Apple config; accepts both APPLE_WALLET_* and APPLE_PASS_* names. Null = not (fully) configured. */
+export function appleWalletConfig(env: Env): AppleWalletConfig | null {
+  const c = {
+    passTypeId: pick(env, "APPLE_WALLET_PASS_TYPE_ID", "APPLE_PASS_TYPE_ID"),
+    teamId: pick(env, "APPLE_WALLET_TEAM_ID", "APPLE_TEAM_ID"),
+    certPem: pick(env, "APPLE_WALLET_CERT_PEM", "APPLE_PASS_CERTIFICATE"),
+    keyPem: pick(env, "APPLE_WALLET_KEY_PEM", "APPLE_PASS_KEY"),
+    passphrase: pick(env, "APPLE_WALLET_KEY_PASSPHRASE", "APPLE_PASS_KEY_PASSPHRASE"),
+    wwdrPem: pick(env, "APPLE_WALLET_WWDR_PEM", "APPLE_WWDR_CERTIFICATE"),
+  };
+  return c.passTypeId && c.teamId && c.certPem && c.keyPem && c.wwdrPem ? c : null;
+}
+
+/** Resolves Google config from separate vars or the service-account JSON (GOOGLE_WALLET_SERVICE_ACCOUNT). */
+export function googleWalletConfig(env: Env): GoogleWalletConfig | null {
+  let email = pick(env, "GOOGLE_WALLET_SERVICE_ACCOUNT_EMAIL");
+  let key = pick(env, "GOOGLE_WALLET_PRIVATE_KEY");
+  const json = pick(env, "GOOGLE_WALLET_SERVICE_ACCOUNT");
+  if (json && (!email || !key)) {
+    try {
+      const sa = JSON.parse(json) as { client_email?: unknown; private_key?: unknown };
+      if (!email && typeof sa.client_email === "string") email = sa.client_email;
+      if (!key && typeof sa.private_key === "string") key = sa.private_key;
+    } catch {
+      /* malformed JSON = not configured */
+    }
+  }
+  const issuerId = pick(env, "GOOGLE_WALLET_ISSUER_ID");
+  return issuerId && email && key ? { issuerId, serviceAccountEmail: email, privateKey: key } : null;
+}
 
 /** Which wallets can issue passes; partial configuration counts as off. */
 export function walletStatus(env: Env): WalletStatus {
-  return {
-    apple: ["APPLE_WALLET_PASS_TYPE_ID", "APPLE_WALLET_TEAM_ID", "APPLE_WALLET_CERT_PEM", "APPLE_WALLET_KEY_PEM", "APPLE_WALLET_WWDR_PEM"].every((k) => has(env, k)),
-    google: ["GOOGLE_WALLET_ISSUER_ID", "GOOGLE_WALLET_SERVICE_ACCOUNT_EMAIL", "GOOGLE_WALLET_PRIVATE_KEY"].every((k) => has(env, k)),
-  };
+  return { apple: !!appleWalletConfig(env), google: !!googleWalletConfig(env) };
 }
 
 export function isWalletKind(v: unknown): v is WalletKind {
