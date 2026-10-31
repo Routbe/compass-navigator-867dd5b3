@@ -20,12 +20,13 @@
 - [x] Round 9 C: Apple Wallet (.pkpass) + Google Wallet for profiles and events, "Add to Wallet" in share menu + event page, fallback without certificates
 - [x] Round 9 D: 1077 tests green, typecheck clean
 
-## Open (audit round 10)
-- [ ] Wallet: accept APPLE_PASS_* / GOOGLE_WALLET_SERVICE_ACCOUNT names, demo payload when not configured, pass-generator.server.ts
-- [ ] Short link /e/:slug → /event/:slug (301)
-- [ ] Profile agenda card fed by published profile_events (detail, .ics, Google)
-- [ ] Steam QR type (official mark, steamcommunity.com/id|profiles validation, Steam style)
-- [ ] Missing keys never crash UI (Steam, social login, Brevo, wallet) — audit
+- [x] Round 10: wallet accepts APPLE_PASS_* / GOOGLE_WALLET_SERVICE_ACCOUNT, demo payload without certificates (pass-generator.server.ts)
+- [x] Round 10: short link /e/:slug → /event/:slug (301)
+- [x] Round 10: profile agenda card fed by published profile_events (details, .ics, Google)
+- [x] Round 10: Steam QR type (official mark, steamcommunity.com/id|profiles validation, Steam look)
+- [x] Round 10: missing keys audited (Steam card hidden, social login 400 provider_not_configured, wallet demo, Brevo never throws); 1086 tests green, typecheck clean
+
+## Open
 - [ ] Relay address as a choice on the "Login met ROUT" consent screen (forwarding pipeline is ready; ensureForwardingAddress not yet offered to apps)
 
 ## Waiting on user
