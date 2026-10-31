@@ -16,11 +16,13 @@
 - [x] Migration 0125: legacy password column dropped on Neon
 - [x] OIDC email broker (RFC-004): per-app email routing + pairwise app IDs
 
-## Open (handoff round 9)
-- [ ] Task B: inbound OIDC email forwarding (priv-…@mail.rout.be → verified email), migration 0137, webhook, tests
-- [ ] Task C: Apple Wallet (.pkpass) + Google Wallet for profile and event, "Add to Wallet" in share menu + event page, friendly fallback without certificates
-- [ ] Task D: full test run, typecheck, roadmap update
+- [x] Round 9 B: private e-mail relay (priv-…@mail.rout.be → verified email), 0137 applied, Brevo inbound webhook, tests
+- [x] Round 9 C: Apple Wallet (.pkpass) + Google Wallet for profiles and events, "Add to Wallet" in share menu + event page, fallback without certificates
+- [x] Round 9 D: 1077 tests green, typecheck clean
+
+## Open
+- [ ] Relay address as a choice on the "Login met ROUT" consent screen (forwarding pipeline is ready; ensureForwardingAddress not yet offered to apps)
 
 ## Waiting on user
-- [ ] Secrets in this project (Better Auth, Brevo, Stripe/Wise, storage, Steam, wallet certificates, EMAIL_INBOUND_TOKEN)
+- [ ] Secrets in this project: BETTER_AUTH_SECRET, ROUT_PROVIDER_*, Google/Apple sign-in, BREVO_API_KEY, Stripe/Wise, storage, STEAM_WEB_API_KEY, Apple/Google Wallet certificates, EMAIL_INBOUND_TOKEN
 - [ ] Live sign-in test (needs secrets)
