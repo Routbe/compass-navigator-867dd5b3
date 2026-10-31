@@ -1529,5 +1529,9 @@
   "wallet.google": "Google Wallet",
   "wallet.unavailable": "Les passes Wallet ne sont pas encore disponibles. En attendant, téléchargez le code QR ou la carte de visite via le menu de partage.",
   "wallet.partly": "Tous les wallets ne sont pas encore disponibles.",
-  "wallet.failed": "Le pass n'a pas pu être créé. Réessayez plus tard."
+  "wallet.failed": "Le pass n'a pas pu être créé. Réessayez plus tard.",
+  "profile.upcomingEvents": "Événements à venir",
+  "profile.eventDetails": "Détails",
+  "type.steam": "Profil Steam",
+  "type.steam.desc": "Partagez votre profil Steam en un scan."
 }

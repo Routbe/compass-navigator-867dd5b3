@@ -70,6 +70,7 @@ import { Route as BookingBookingIdRouteImport } from './routes/booking.$bookingI
 import { Route as BrandSplatRouteImport } from './routes/brand.$'
 import { Route as ClaimTokenRouteImport } from './routes/claim_.$token'
 import { Route as DevEmailsRouteImport } from './routes/dev.emails'
+import { Route as ESlugRouteImport } from './routes/e.$slug'
 import { Route as EventSlugRouteImport } from './routes/event.$slug'
 import { Route as FIdRouteImport } from './routes/f.$id'
 import { Route as FeedbackSlugRouteImport } from './routes/feedback.$slug'
@@ -506,6 +507,11 @@ const ClaimTokenRoute = ClaimTokenRouteImport.update({
 const DevEmailsRoute = DevEmailsRouteImport.update({
   id: '/dev/emails',
   path: '/dev/emails',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ESlugRoute = ESlugRouteImport.update({
+  id: '/e/$slug',
+  path: '/e/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventSlugRoute = EventSlugRouteImport.update({
@@ -1295,6 +1301,7 @@ export interface FileRoutesByFullPath {
   '/brand/$': typeof BrandSplatRoute
   '/claim/$token': typeof ClaimTokenRoute
   '/dev/emails': typeof DevEmailsRoute
+  '/e/$slug': typeof ESlugRoute
   '/event/$slug': typeof EventSlugRoute
   '/f/$id': typeof FIdRoute
   '/feedback/$slug': typeof FeedbackSlugRoute
@@ -1486,6 +1493,7 @@ export interface FileRoutesByTo {
   '/brand/$': typeof BrandSplatRoute
   '/claim/$token': typeof ClaimTokenRoute
   '/dev/emails': typeof DevEmailsRoute
+  '/e/$slug': typeof ESlugRoute
   '/event/$slug': typeof EventSlugRoute
   '/f/$id': typeof FIdRoute
   '/feedback/$slug': typeof FeedbackSlugRoute
@@ -1680,6 +1688,7 @@ export interface FileRoutesById {
   '/brand/$': typeof BrandSplatRoute
   '/claim_/$token': typeof ClaimTokenRoute
   '/dev/emails': typeof DevEmailsRoute
+  '/e/$slug': typeof ESlugRoute
   '/event/$slug': typeof EventSlugRoute
   '/f/$id': typeof FIdRoute
   '/feedback/$slug': typeof FeedbackSlugRoute
@@ -1876,6 +1885,7 @@ export interface FileRouteTypes {
     | '/brand/$'
     | '/claim/$token'
     | '/dev/emails'
+    | '/e/$slug'
     | '/event/$slug'
     | '/f/$id'
     | '/feedback/$slug'
@@ -2067,6 +2077,7 @@ export interface FileRouteTypes {
     | '/brand/$'
     | '/claim/$token'
     | '/dev/emails'
+    | '/e/$slug'
     | '/event/$slug'
     | '/f/$id'
     | '/feedback/$slug'
@@ -2260,6 +2271,7 @@ export interface FileRouteTypes {
     | '/brand/$'
     | '/claim_/$token'
     | '/dev/emails'
+    | '/e/$slug'
     | '/event/$slug'
     | '/f/$id'
     | '/feedback/$slug'
@@ -2447,6 +2459,7 @@ export interface RootRouteChildren {
   BrandSplatRoute: typeof BrandSplatRoute
   ClaimTokenRoute: typeof ClaimTokenRoute
   DevEmailsRoute: typeof DevEmailsRoute
+  ESlugRoute: typeof ESlugRoute
   EventSlugRoute: typeof EventSlugRoute
   FIdRoute: typeof FIdRoute
   FeedbackSlugRoute: typeof FeedbackSlugRoute
@@ -2961,6 +2974,13 @@ declare module '@tanstack/react-router' {
       path: '/dev/emails'
       fullPath: '/dev/emails'
       preLoaderRoute: typeof DevEmailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/e/$slug': {
+      id: '/e/$slug'
+      path: '/e/$slug'
+      fullPath: '/e/$slug'
+      preLoaderRoute: typeof ESlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/event/$slug': {
@@ -4153,6 +4173,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandSplatRoute: BrandSplatRoute,
   ClaimTokenRoute: ClaimTokenRoute,
   DevEmailsRoute: DevEmailsRoute,
+  ESlugRoute: ESlugRoute,
   EventSlugRoute: EventSlugRoute,
   FIdRoute: FIdRoute,
   FeedbackSlugRoute: FeedbackSlugRoute,

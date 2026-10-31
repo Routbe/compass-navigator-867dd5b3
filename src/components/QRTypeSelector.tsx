@@ -25,6 +25,7 @@ import {
 import { PAYMENT_METHODS, isPaymentType, PaymentId } from "@/lib/payments";
 import { useI18n } from "@/lib/i18n";
 import { PaymentBrandIcon } from "./PaymentBrandIcon";
+import { siSteam } from "simple-icons";
 
 export type QRType =
   | "url"
@@ -43,6 +44,7 @@ export type QRType =
   | "maps"
   | "meeting"
   | "feedback"
+  | "steam"
   | PaymentId;
 
 export interface QRTypeOption {
@@ -94,6 +96,7 @@ export const baseQrTypes: QRTypeOption[] = [
   { id: "maps", label: "Map location", labelKey: "type.maps" },
   { id: "meeting", label: "Meeting link", labelKey: "type.meeting" },
   { id: "feedback", label: "Feedback & Reviews", labelKey: "type.feedback" },
+  { id: "steam", label: "Steam profile", labelKey: "type.steam" },
 ];
 
 const byId = (id: QRType) => baseQrTypes.find((t) => t.id === id)!;
@@ -113,7 +116,7 @@ export const qrTypeCategories: QRTypeCategory[] = [
     labelKey: "cat.link",
     label: "Link & Web",
     Icon: Link2,
-    types: [byId("url"), byId("app"), byId("social")],
+    types: [byId("url"), byId("app"), byId("social"), byId("steam")],
   },
   {
     id: "payment",
@@ -157,6 +160,15 @@ export function QRTypeIcon({ id, fallback }: { id: QRType; fallback?: typeof Lin
     return (
       <span className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
         <PaymentBrandIcon id={id} className="w-6 h-6" />
+      </span>
+    );
+  }
+  if (id === "steam") {
+    return (
+      <span className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+        <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current text-foreground" role="img" aria-label="Steam">
+          <path d={siSteam.path} />
+        </svg>
       </span>
     );
   }

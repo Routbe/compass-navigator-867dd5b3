@@ -26,3 +26,20 @@ describe("wallet passes", () => {
     expect(c.origins).toEqual(["https://rout.be"]);
   });
 });
+
+import { appleWalletConfig, googleWalletConfig } from "./wallet-pass";
+
+describe("wallet certificate names", () => {
+  it("accepts the APPLE_PASS_* names", () => {
+    const c = appleWalletConfig({ APPLE_PASS_TYPE_ID: "pass.be.rout", APPLE_TEAM_ID: "T", APPLE_PASS_CERTIFICATE: "c", APPLE_PASS_KEY: "k", APPLE_WWDR_CERTIFICATE: "w" });
+    expect(c?.certPem).toBe("c");
+    expect(c?.keyPem).toBe("k");
+  });
+  it("reads the Google service-account JSON", () => {
+    const c = googleWalletConfig({ GOOGLE_WALLET_ISSUER_ID: "338", GOOGLE_WALLET_SERVICE_ACCOUNT: JSON.stringify({ client_email: "sa@x.iam", private_key: "KEY" }) });
+    expect(c).toEqual({ issuerId: "338", serviceAccountEmail: "sa@x.iam", privateKey: "KEY" });
+  });
+  it("treats malformed service-account JSON as not configured", () => {
+    expect(googleWalletConfig({ GOOGLE_WALLET_ISSUER_ID: "338", GOOGLE_WALLET_SERVICE_ACCOUNT: "{oops" })).toBeNull();
+  });
+});

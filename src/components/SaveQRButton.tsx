@@ -43,6 +43,7 @@ const TYPE_LABELS: Record<string, string> = {
   social: "Social hub",
   maps: "Location",
   meeting: "Meeting link",
+  steam: "Steam profile",
 };
 
 /**

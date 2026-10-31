@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { InfoHint } from "@/components/InfoHint";
 import { PAYMENT_METHODS, buildPaymentPayload, isPaymentType } from "@/lib/payments";
 import { isRichType, buildRichPayload } from "@/lib/rich-qr";
+import { STEAM_QR_STYLE, steamLogoDataUrl } from "@/lib/steam-qr-style";
 import { signGoLink } from "@/lib/go-link.functions";
 import { suggestFilename } from "@/lib/brand";
 
@@ -117,6 +118,15 @@ const Index = () => {
     }).catch(() => undefined);
     return () => { cancelled = true; };
   }, [qrType, user?.id, loadQrSettings]);
+
+  // Steam type: switch to the Steam look once when the type is chosen; members can still restyle.
+  useEffect(() => {
+    if (qrType !== "steam") return;
+    setFgColor(STEAM_QR_STYLE.fgColor);
+    setDotStyle(STEAM_QR_STYLE.dotStyle as DotType);
+    setLogo(steamLogoDataUrl());
+    setLogoSize(STEAM_QR_STYLE.logoSize);
+  }, [qrType]);
 
   const shapePresetMap: Record<
     BodyShape,

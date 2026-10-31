@@ -49,7 +49,7 @@ import { parseBookingConfig } from "@/lib/booking";
 import { GalleryCard } from "@/components/profile/GalleryCard";
 import { MediaEmbedCard } from "@/components/profile/MediaEmbedCard";
 import { ContactFormCard } from "@/components/profile/ContactFormCard";
-import { EventListCard } from "@/components/profile/EventListCard";
+import { ProfileEventList } from "@/components/profile/EventListCard";
 import { PollCard } from "@/components/profile/PollCard";
 import { FaqCard } from "@/components/profile/FaqCard";
 import { MapCard } from "@/components/profile/MapCard";
@@ -460,6 +460,7 @@ export function ProfileView({
         <ProfilePassport handle={profile.username} theme={t} />
         {profile.username && prefs.guestbookEnabled && usesSectionFallback(profile.blocks, "widget:guestbook") && <ProfileGuestbook handle={profile.username} theme={t} />}
         {profile.username && prefs.questionsEnabled && <ProfileQuestions handle={profile.username} theme={t} />}
+        {profile.username && !profile.blocks.some(b => b.kind === "event_list") && <ProfileEventList handle={profile.username} space={free ? "alias" : "root"} style={styleFor("event_list")} />}
         {profile.username && !profile.blocks.some(b => b.kind === "feedback") && <ProfileFeedback handle={profile.username} space={free ? "alias" : "root"} style={styleFor("feedback")} />}
 
         {earlyBeliever && (
@@ -655,8 +656,10 @@ export function ProfileView({
                   style={styleFor(b.kind)}
                 />
               ) : b.kind === "event_list" ? (
-                <EventListCard
+                <ProfileEventList
                   key={b.id}
+                  handle={profile.username ?? ""}
+                  space={free ? "alias" : "root"}
                   config={parseEventListConfig(b.value)}
                   style={styleFor(b.kind)}
                 />
