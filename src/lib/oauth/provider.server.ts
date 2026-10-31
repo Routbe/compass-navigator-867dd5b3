@@ -591,7 +591,7 @@ export async function exchangeAuthorizationCode(input: {
 
   const userId = String(row["user_id"]);
   const scopes = (row["scopes"] as string[] | null) ?? [];
-  const claims = await identityClaims(userId, scopes, { handleSync: client.handleSyncEnabled });
+  const claims = await identityClaims(userId, scopes, { handleSync: client.handleSyncEnabled, clientId: client.clientId });
   // Rich Identity: enkel als de app het aanzette én de gebruiker het aanvinkte.
   if (row["rich_identity"] && client.richIdentityEnabled) {
     try {
@@ -653,7 +653,7 @@ export async function exchangeAuthorizationCode(input: {
 export async function identityClaims(
   userId: string,
   scopes: string[],
-  opts: { handleSync?: boolean } = {},
+  opts: { handleSync?: boolean; clientId?: string | null } = {},
 ): Promise<Record<string, unknown>> {
   const rows = (await sql`select u.email, u.email_confirmed_at, p.username, p.display_name, p.avatar_url
     from public.users u left join public.profiles p on p.user_id = u.id
@@ -671,6 +671,19 @@ export async function identityClaims(
   if (scopes.includes("email")) {
     claims["email"] = row["email"] ?? null;
     claims["email_verified"] = Boolean(row["email_confirmed_at"]);
+    if (opts.clientId) {
+      // Per-app choice (primary, alias or private relay); falls back to the primary on any failure.
+      try {
+        const { appEmailFor } = await import("./email-broker.server");
+        const chosen = await appEmailFor(userId, opts.clientId);
+        if (chosen) {
+          claims["email"] = chosen.email;
+          claims["email_verified"] = chosen.verified;
+        }
+      } catch (e) {
+        console.warn("[oauth] app email lookup failed", (e as Error)?.message);
+      }
+    }
   }
   if (scopes.includes("linked_accounts")) {
     // Alleen dienst + account-ID: genoeg om dubbele accounts bij de app te voorkomen.

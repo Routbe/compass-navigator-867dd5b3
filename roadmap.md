@@ -27,7 +27,8 @@
 - [x] Round 10: missing keys audited (Steam card hidden, social login 400 provider_not_configured, wallet demo, Brevo never throws); 1086 tests green, typecheck clean
 
 ## Open
-- [ ] Relay address as a choice on the "Login met ROUT" consent screen (forwarding pipeline is ready; ensureForwardingAddress not yet offered to apps)
+- [x] Relay address as a choice on the "Login met ROUT" consent screen (0138 applied)
+- [ ] Expansion rounds C–G (encounters, ZK badges/VIES/employee credentials, human-only drops + E2E forms, brand kits + SEPA, human_verified claim + rout.config.json) — each needs its own plan
 
 ## Waiting on user
 - [ ] Secrets in this project: BETTER_AUTH_SECRET, ROUT_PROVIDER_*, Google/Apple sign-in, BREVO_API_KEY, Stripe/Wise, storage, STEAM_WEB_API_KEY, Apple/Google Wallet certificates, EMAIL_INBOUND_TOKEN

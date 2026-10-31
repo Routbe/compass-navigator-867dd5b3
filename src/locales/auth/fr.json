@@ -192,5 +192,9 @@
   "auth.settings.passkeys.never": "Jamais",
   "auth.settings.passkeys.dates": "Ajoutée le {{created}} · dernière utilisation {{used}}",
   "auth.settings.passkeys.removeLabel": "Supprimer {{name}}",
-  "auth.settings.passkeys.confirmBody": "Vous ne pourrez plus vous connecter avec {{name}}. Vous pourrez l’ajouter à nouveau. La connexion par e-mail reste disponible."
+  "auth.settings.passkeys.confirmBody": "Vous ne pourrez plus vous connecter avec {{name}}. Vous pourrez l’ajouter à nouveau. La connexion par e-mail reste disponible.",
+  "auth.consent.emailPick": "Quelle adresse e-mail cette app reçoit-elle ?",
+  "auth.consent.email.primary": "Adresse e-mail principale",
+  "auth.consent.email.alias": "Adresse e-mail supplémentaire",
+  "auth.consent.email.relay": "ROUT Private Relay (l'app ne voit jamais votre vraie adresse)"
 }

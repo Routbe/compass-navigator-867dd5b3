@@ -192,5 +192,9 @@
   "auth.settings.passkeys.never": "Nie",
   "auth.settings.passkeys.dates": "Hinzugefügt {{created}} · zuletzt verwendet {{used}}",
   "auth.settings.passkeys.removeLabel": "{{name}} entfernen",
-  "auth.settings.passkeys.confirmBody": "Mit {{name}} kannst du dich nicht mehr anmelden. Du kannst den Passkey erneut registrieren. Die Anmeldung per E-Mail bleibt verfügbar."
+  "auth.settings.passkeys.confirmBody": "Mit {{name}} kannst du dich nicht mehr anmelden. Du kannst den Passkey erneut registrieren. Die Anmeldung per E-Mail bleibt verfügbar.",
+  "auth.consent.emailPick": "Welche E-Mail-Adresse bekommt diese App?",
+  "auth.consent.email.primary": "Primäre E-Mail-Adresse",
+  "auth.consent.email.alias": "Zusätzliche E-Mail-Adresse",
+  "auth.consent.email.relay": "ROUT Private Relay (die App sieht deine echte Adresse nie)"
 }

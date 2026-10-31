@@ -11,7 +11,7 @@ export async function exchangeRefreshToken(input: { token: string; clientId: str
   const ttl = client.accessTokenTtl;
   const scopes = row["scopes"] as string[];
   const token = await signJwt({ iss: issuer(), sub: row["subject"], aud: client.clientId, iat: now, exp: now+ttl, scope: scopes.join(" "), token_use: "access", jti: crypto.randomUUID() });
-  const claims = await identityClaims(String(row["user_id"]), scopes, { handleSync: client.handleSyncEnabled });
+  const claims = await identityClaims(String(row["user_id"]), scopes, { handleSync: client.handleSyncEnabled, clientId: client.clientId });
   const idToken = await signJwt({ iss: issuer(), sub: row["subject"], aud: client.clientId, iat: now, exp: now+ttl, token_use: "id",
     ...(row["auth_time"] ? { auth_time: Math.floor(new Date(String(row["auth_time"])).getTime()/1000) } : {}), ...(row["acr"] ? { acr: row["acr"] } : {}), ...claims });
   // The family lock and status check are repeated when persisting the access token.

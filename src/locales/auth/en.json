@@ -192,5 +192,9 @@
   "auth.settings.passkeys.never": "Never",
   "auth.settings.passkeys.dates": "Added {{created}} · last used {{used}}",
   "auth.settings.passkeys.removeLabel": "Remove {{name}}",
-  "auth.settings.passkeys.confirmBody": "{{name}} will no longer sign you in. You can register it again. Email sign-in remains available."
+  "auth.settings.passkeys.confirmBody": "{{name}} will no longer sign you in. You can register it again. Email sign-in remains available.",
+  "auth.consent.emailPick": "Which e-mail address does this app get?",
+  "auth.consent.email.primary": "Primary e-mail address",
+  "auth.consent.email.alias": "Extra e-mail address",
+  "auth.consent.email.relay": "ROUT Private Relay (the app never sees your real address)"
 }

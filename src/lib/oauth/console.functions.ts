@@ -302,6 +302,9 @@ export type AuthorizePrompt = {
   };
   scopes?: string[];
   account?: { email: string; name: string | null; handle: string | null; avatarUrl: string | null };
+  /** E-mail choices for this app (only when the email scope is asked). */
+  emailOptions?: { id: string; source: "primary" | "alias" | "relay"; email: string }[];
+  emailChoice?: string;
   /** Sign-in providers linked to this ROUT account (Google, Apple, …) — names only. */
   linkedProviders?: string[];
   alreadyGranted?: boolean;
@@ -424,6 +427,17 @@ export const describeAuthorizeRequest = createServerFn({ method: "POST" })
         const list = await linkedAccountsOf(context.userId).catch(() => []);
         return [...new Set(list.map((l) => l.provider))];
       })(),
+      ...(await (async () => {
+        if (!scopes.includes("email")) return {};
+        try {
+          const { emailOptionsOf, appEmailFor } = await import("./email-broker.server");
+          const options = await emailOptionsOf(context.userId, client.clientId);
+          const current = await appEmailFor(context.userId, client.clientId);
+          return { emailOptions: options.map((o) => ({ id: o.id, source: o.source, email: o.email })), emailChoice: current?.id ?? "primary" };
+        } catch {
+          return {};
+        }
+      })()),
       alreadyGranted: await hasConsent(context.userId, client.clientId, scopes),
       requiresStepUp: stepUp,
       richIdentity: client.richIdentityEnabled,
@@ -433,7 +447,7 @@ export const describeAuthorizeRequest = createServerFn({ method: "POST" })
 export const decideAuthorizeRequest = createServerFn({ method: "POST" })
   .middleware([requireAuth])
   .inputValidator((data: unknown) =>
-    authorizeSchema.extend({ allow: z.boolean(), richIdentityOptIn: z.boolean().optional() }).parse(data),
+    authorizeSchema.extend({ allow: z.boolean(), richIdentityOptIn: z.boolean().optional(), emailChoice: z.string().max(64).optional() }).parse(data),
   )
   .handler(async ({ data, context }): Promise<{ redirectTo: string } | { error: string }> => {
     {
@@ -482,6 +496,10 @@ export const decideAuthorizeRequest = createServerFn({ method: "POST" })
     const { hasConsent: hadConsent } = await import("./provider.server");
     const firstTime = !(await hadConsent(context.userId, client.clientId, scopes).catch(() => true));
     await rememberConsent(context.userId, client.clientId, scopes);
+    if (scopes.includes("email") && data.emailChoice) {
+      const { assignAppEmail } = await import("./email-broker.server");
+      await assignAppEmail(context.userId, client.clientId, data.emailChoice).catch((e) => console.warn("[oauth] email choice not saved", (e as Error)?.message));
+    }
     if (firstTime) {
       const { later, recipient, sendSiteMail, siteOrigin } = await import("@/lib/site-mail.server");
       later(async () => {

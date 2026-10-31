@@ -17,13 +17,26 @@ export function forwardDomain(): string {
   return (process.env["ROUT_FORWARD_EMAIL_DOMAIN"] ?? "").trim().toLowerCase() || FORWARD_DOMAIN_DEFAULT;
 }
 
+async function relayLocal(userId: string, clientId: string): Promise<string> {
+  const secret = process.env["ROUT_PROVIDER_PAIRWISE_SECRET"] ?? "";
+  return forwardAliasLocal(await pairwiseSubject(secret, `relay:${clientId}`, userId));
+}
+
+/** The relay address for one user + app, without creating anything (null when the secret is missing). */
+export async function relayAddressFor(userId: string, clientId: string): Promise<string | null> {
+  try {
+    return `${await relayLocal(userId, clientId)}@${forwardDomain()}`;
+  } catch {
+    return null;
+  }
+}
+
 /** Creates (or returns) the relay address for one user + app. */
 export async function ensureForwardingAddress(userId: string, clientId: string): Promise<string> {
-  const secret = process.env["ROUT_PROVIDER_PAIRWISE_SECRET"] ?? "";
-  const local = await forwardAliasLocal(await pairwiseSubject(secret, `relay:${clientId}`, userId));
+  const local = await relayLocal(userId, clientId);
   const rows = (await sql`insert into public.oauth_email_forwarding_rules (user_id, client_id, alias_local)
     values (${userId}, ${clientId}, ${local})
-    on conflict (user_id, client_id) do update set updated_at = public.oauth_email_forwarding_rules.updated_at
+    on conflict (user_id, client_id) do update set status = 'active', updated_at = now()
     returning alias_local`) as Row[];
   return `${String(rows[0]?.["alias_local"] ?? local)}@${forwardDomain()}`;
 }
