@@ -185,6 +185,7 @@ import { Route as ApiPublicYoutubeCallbackRouteImport } from './routes/api_.publ
 import { Route as ApiPublicYoutubeCardRouteImport } from './routes/api_.public.youtube.card'
 import { Route as ApiPublicYoutubePushRouteImport } from './routes/api_.public.youtube.push'
 import { Route as ApiUserVaultExportRouteImport } from './routes/api_.user.vault.export'
+import { Route as ApiWalletKindIdRouteImport } from './routes/api_.wallet.$kind.$id'
 import { Route as AuthenticatedConsoleAppsAppIdIndexRouteImport } from './routes/_authenticated/console.apps.$appId.index'
 import { Route as AuthenticatedConsoleAppsAppIdAdvancedRouteImport } from './routes/_authenticated/console.apps.$appId.advanced'
 import { Route as AuthenticatedConsoleAppsAppIdAiPromptsRouteImport } from './routes/_authenticated/console.apps.$appId.ai-prompts'
@@ -1132,6 +1133,11 @@ const ApiUserVaultExportRoute = ApiUserVaultExportRouteImport.update({
   path: '/api/user/vault/export',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWalletKindIdRoute = ApiWalletKindIdRouteImport.update({
+  id: '/api_/wallet/$kind/$id',
+  path: '/api/wallet/$kind/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedConsoleAppsAppIdIndexRoute =
   AuthenticatedConsoleAppsAppIdIndexRouteImport.update({
     id: '/',
@@ -1404,6 +1410,7 @@ export interface FileRoutesByFullPath {
   '/api/public/youtube/card': typeof ApiPublicYoutubeCardRoute
   '/api/public/youtube/push': typeof ApiPublicYoutubePushRoute
   '/api/user/vault/export': typeof ApiUserVaultExportRoute
+  '/api/wallet/$kind/$id': typeof ApiWalletKindIdRoute
   '/console/apps/': typeof AuthenticatedConsoleAppsIndexRoute
   '/console/apps/$appId/advanced': typeof AuthenticatedConsoleAppsAppIdAdvancedRoute
   '/console/apps/$appId/ai-prompts': typeof AuthenticatedConsoleAppsAppIdAiPromptsRoute
@@ -1592,6 +1599,7 @@ export interface FileRoutesByTo {
   '/api/public/youtube/card': typeof ApiPublicYoutubeCardRoute
   '/api/public/youtube/push': typeof ApiPublicYoutubePushRoute
   '/api/user/vault/export': typeof ApiUserVaultExportRoute
+  '/api/wallet/$kind/$id': typeof ApiWalletKindIdRoute
   '/console/apps': typeof AuthenticatedConsoleAppsIndexRoute
   '/console/apps/$appId/advanced': typeof AuthenticatedConsoleAppsAppIdAdvancedRoute
   '/console/apps/$appId/ai-prompts': typeof AuthenticatedConsoleAppsAppIdAiPromptsRoute
@@ -1787,6 +1795,7 @@ export interface FileRoutesById {
   '/api_/public/youtube/card': typeof ApiPublicYoutubeCardRoute
   '/api_/public/youtube/push': typeof ApiPublicYoutubePushRoute
   '/api_/user/vault/export': typeof ApiUserVaultExportRoute
+  '/api_/wallet/$kind/$id': typeof ApiWalletKindIdRoute
   '/_authenticated/console/apps/': typeof AuthenticatedConsoleAppsIndexRoute
   '/_authenticated/console/apps/$appId/advanced': typeof AuthenticatedConsoleAppsAppIdAdvancedRoute
   '/_authenticated/console/apps/$appId/ai-prompts': typeof AuthenticatedConsoleAppsAppIdAiPromptsRoute
@@ -1982,6 +1991,7 @@ export interface FileRouteTypes {
     | '/api/public/youtube/card'
     | '/api/public/youtube/push'
     | '/api/user/vault/export'
+    | '/api/wallet/$kind/$id'
     | '/console/apps/'
     | '/console/apps/$appId/advanced'
     | '/console/apps/$appId/ai-prompts'
@@ -2170,6 +2180,7 @@ export interface FileRouteTypes {
     | '/api/public/youtube/card'
     | '/api/public/youtube/push'
     | '/api/user/vault/export'
+    | '/api/wallet/$kind/$id'
     | '/console/apps'
     | '/console/apps/$appId/advanced'
     | '/console/apps/$appId/ai-prompts'
@@ -2364,6 +2375,7 @@ export interface FileRouteTypes {
     | '/api_/public/youtube/card'
     | '/api_/public/youtube/push'
     | '/api_/user/vault/export'
+    | '/api_/wallet/$kind/$id'
     | '/_authenticated/console/apps/'
     | '/_authenticated/console/apps/$appId/advanced'
     | '/_authenticated/console/apps/$appId/ai-prompts'
@@ -2518,6 +2530,7 @@ export interface RootRouteChildren {
   ApiPublicYoutubeCardRoute: typeof ApiPublicYoutubeCardRoute
   ApiPublicYoutubePushRoute: typeof ApiPublicYoutubePushRoute
   ApiUserVaultExportRoute: typeof ApiUserVaultExportRoute
+  ApiWalletKindIdRoute: typeof ApiWalletKindIdRoute
   ApiPublicBookingsIdActionRoute: typeof ApiPublicBookingsIdActionRoute
 }
 
@@ -3755,6 +3768,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiUserVaultExportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api_/wallet/$kind/$id': {
+      id: '/api_/wallet/$kind/$id'
+      path: '/api/wallet/$kind/$id'
+      fullPath: '/api/wallet/$kind/$id'
+      preLoaderRoute: typeof ApiWalletKindIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/console/apps/$appId/': {
       id: '/_authenticated/console/apps/$appId/'
       path: '/'
@@ -4217,6 +4237,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicYoutubeCardRoute: ApiPublicYoutubeCardRoute,
   ApiPublicYoutubePushRoute: ApiPublicYoutubePushRoute,
   ApiUserVaultExportRoute: ApiUserVaultExportRoute,
+  ApiWalletKindIdRoute: ApiWalletKindIdRoute,
   ApiPublicBookingsIdActionRoute: ApiPublicBookingsIdActionRoute,
 }
 export const routeTree = rootRouteImport
