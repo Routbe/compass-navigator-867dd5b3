@@ -266,6 +266,15 @@ export interface PublicApiKeysRow {
   "workspace_id": string | null;
 }
 
+export interface PublicAppEmailAssignmentsRow {
+  "user_id": string;
+  "client_id": string;
+  "source": string;
+  "alias_id": string | null;
+  "assigned_email": string;
+  "updated_at": string | Date;
+}
+
 export interface PublicApprovedHandlesRow {
   "id": string;
   "user_id": string;
@@ -963,6 +972,27 @@ export interface PublicOauthDebugEventsRow {
   "error_code": string | null;
   "detail": JsonValue;
   "created_at": string | Date;
+}
+
+export interface PublicOauthEmailDeliveriesRow {
+  "id": string;
+  "rule_id": string | null;
+  "user_id": string | null;
+  "status": string;
+  "reason": string | null;
+  "size_bytes": number | null;
+  "message_id_hash": string | null;
+  "created_at": string | Date;
+}
+
+export interface PublicOauthEmailForwardingRulesRow {
+  "id": string;
+  "user_id": string;
+  "client_id": string;
+  "alias_local": string;
+  "status": string;
+  "created_at": string | Date;
+  "updated_at": string | Date;
 }
 
 export interface PublicOauthRefreshTokensRow {
@@ -1936,6 +1966,7 @@ export interface DbTables {
   "public.ambient_weather_locations": PublicAmbientWeatherLocationsRow;
   "public.analytics_events": PublicAnalyticsEventsRow;
   "public.api_keys": PublicApiKeysRow;
+  "public.app_email_assignments": PublicAppEmailAssignmentsRow;
   "public.approved_handles": PublicApprovedHandlesRow;
   "public.auth_tokens": PublicAuthTokensRow;
   "public.availability_cache": PublicAvailabilityCacheRow;
@@ -1993,6 +2024,8 @@ export interface DbTables {
   "public.oauth_clients": PublicOauthClientsRow;
   "public.oauth_consents": PublicOauthConsentsRow;
   "public.oauth_debug_events": PublicOauthDebugEventsRow;
+  "public.oauth_email_deliveries": PublicOauthEmailDeliveriesRow;
+  "public.oauth_email_forwarding_rules": PublicOauthEmailForwardingRulesRow;
   "public.oauth_refresh_tokens": PublicOauthRefreshTokensRow;
   "public.oauth_signing_keys": PublicOauthSigningKeysRow;
   "public.oauth_step_up_codes": PublicOauthStepUpCodesRow;
