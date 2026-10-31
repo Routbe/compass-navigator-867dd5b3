@@ -35,16 +35,19 @@ export async function assignAppEmail(userId: string, clientId: string, choiceId:
       assigned_email = excluded.assigned_email, updated_at = now()`;
 }
 
-/** Email claim for one app. A relay counts only while its forwarding rule is active. */
+/** Email claim for one app (a chosen relay always wins over the real address). */
 export async function appEmailFor(userId: string, clientId: string | null): Promise<EmailOption | null> {
   const options = await emailOptionsOf(userId, clientId);
   if (!clientId) return resolveAppEmail(null, options);
-  const r = ((await sql`select a.source, a.alias_id, a.assigned_email,
-      (select f.status from public.oauth_email_forwarding_rules f where f.user_id = a.user_id and f.client_id = a.client_id) as relay_status
+  const r = ((await sql`select a.source, a.alias_id, a.assigned_email
     from public.app_email_assignments a where a.user_id = ${userId} and a.client_id = ${clientId} limit 1`) as Row[])[0];
   if (!r) return resolveAppEmail(null, options);
   const source = r["source"] as EmailSource;
-  if (source === "relay" && r["relay_status"] !== "active") return resolveAppEmail(null, options);
+  // A chosen relay stays the app's address even when forwarding is paused or the
+  // secret is missing here: the real address is never handed out instead.
+  if (source === "relay" && typeof r["assigned_email"] === "string") {
+    return { id: "relay", source: "relay", aliasId: null, email: r["assigned_email"], verified: true };
+  }
   const resolved = resolveAppEmail({ source, aliasId: (r["alias_id"] as string | null) ?? null }, options);
   // The stored relay address is the one the forwarding rule knows; prefer it over a re-derived one.
   if (resolved?.source === "relay" && typeof r["assigned_email"] === "string") return { ...resolved, email: r["assigned_email"] };

@@ -681,7 +681,10 @@ export async function identityClaims(
           claims["email_verified"] = chosen.verified;
         }
       } catch (e) {
+        // Fail closed: the app may have chosen the relay, so never fall back to the real address.
         console.warn("[oauth] app email lookup failed", (e as Error)?.message);
+        delete claims["email"];
+        delete claims["email_verified"];
       }
     }
   }

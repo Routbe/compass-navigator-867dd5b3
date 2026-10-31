@@ -483,6 +483,17 @@ export const decideAuthorizeRequest = createServerFn({ method: "POST" })
       return { error: "Bevestig eerst de verificatiecode." };
     }
 
+    // Save the e-mail choice before any code exists: a relay choice that cannot be
+    // saved must never fall back to sending the real address to the app.
+    if (scopes.includes("email") && data.emailChoice) {
+      const { assignAppEmail } = await import("./email-broker.server");
+      try {
+        await assignAppEmail(context.userId, client.clientId, data.emailChoice);
+      } catch (e) {
+        console.warn("[oauth] email choice not saved", (e as Error)?.message);
+        if (data.emailChoice !== "primary") return { error: "Je e-mailkeuze kon niet worden opgeslagen. Probeer het opnieuw." };
+      }
+    }
     const code = await issueAuthorizationCode({
       acr: stepUp ? STRICT_ACR : null,
       richIdentity: shareRichIdentity(client.richIdentityEnabled, Boolean(data.richIdentityOptIn)),
@@ -496,10 +507,6 @@ export const decideAuthorizeRequest = createServerFn({ method: "POST" })
     const { hasConsent: hadConsent } = await import("./provider.server");
     const firstTime = !(await hadConsent(context.userId, client.clientId, scopes).catch(() => true));
     await rememberConsent(context.userId, client.clientId, scopes);
-    if (scopes.includes("email") && data.emailChoice) {
-      const { assignAppEmail } = await import("./email-broker.server");
-      await assignAppEmail(context.userId, client.clientId, data.emailChoice).catch((e) => console.warn("[oauth] email choice not saved", (e as Error)?.message));
-    }
     if (firstTime) {
       const { later, recipient, sendSiteMail, siteOrigin } = await import("@/lib/site-mail.server");
       later(async () => {

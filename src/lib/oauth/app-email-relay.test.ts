@@ -49,6 +49,13 @@ describe("app e-mail assignment (server)", () => {
     expect(claims["email"]).toBe(store.assignment?.["assigned_email"]);
     expect(claims["email_verified"]).toBe(true);
   });
+  it("a paused relay never falls back to the real address", async () => {
+    const { assignAppEmail, appEmailFor } = await import("./email-broker.server");
+    await assignAppEmail("user-1", "client-a", "relay");
+    store.ruleActive = false;
+    delete process.env["ROUT_PROVIDER_PAIRWISE_SECRET"];
+    expect((await appEmailFor("user-1", "client-a"))?.email).toBe(store.assignment?.["assigned_email"]);
+  });
   it("another app keeps the primary address", async () => {
     const { identityClaims } = await import("./provider.server");
     const claims = await identityClaims("user-1", ["openid", "email"], { clientId: "client-b" });
