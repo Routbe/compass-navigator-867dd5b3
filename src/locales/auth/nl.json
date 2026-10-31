@@ -192,5 +192,9 @@
   "auth.settings.passkeys.never": "Nooit",
   "auth.settings.passkeys.dates": "Toegevoegd {{created}} · laatst gebruikt {{used}}",
   "auth.settings.passkeys.removeLabel": "{{name}} verwijderen",
-  "auth.settings.passkeys.confirmBody": "Met {{name}} kun je niet meer inloggen. Je kunt de passkey opnieuw toevoegen. Inloggen via e-mail blijft beschikbaar."
+  "auth.settings.passkeys.confirmBody": "Met {{name}} kun je niet meer inloggen. Je kunt de passkey opnieuw toevoegen. Inloggen via e-mail blijft beschikbaar.",
+  "auth.consent.emailPick": "Welk e-mailadres krijgt deze app?",
+  "auth.consent.email.primary": "Primair e-mailadres",
+  "auth.consent.email.alias": "Extra e-mailadres",
+  "auth.consent.email.relay": "ROUT Private Relay (de app ziet je echte adres nooit)"
 }

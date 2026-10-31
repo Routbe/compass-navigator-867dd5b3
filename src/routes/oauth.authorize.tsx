@@ -117,6 +117,7 @@ function AuthorizePage() {
   const [prompt, setPrompt] = useState<AuthorizePrompt | null>(null);
   const [busy, setBusy] = useState(false);
   const [richOptIn, setRichOptIn] = useState(false);
+  const [emailChoice, setEmailChoice] = useState<string | null>(null);
   const [codeSentTo, setCodeSentTo] = useState<string | null>(null);
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState<string | null>(null);
@@ -220,7 +221,7 @@ function AuthorizePage() {
   async function choose(allow: boolean) {
     setBusy(true);
     try {
-      const result = await decide({ data: { ...payload, allow, richIdentityOptIn: richOptIn } });
+      const result = await decide({ data: { ...payload, allow, richIdentityOptIn: richOptIn, emailChoice: emailChoice ?? prompt?.emailChoice } });
       if ("redirectTo" in result) window.location.href = result.redirectTo;
       else if (result.error.startsWith(t("auth.confirm"))) {
         setStepUpDone(false);
@@ -378,6 +379,26 @@ function AuthorizePage() {
           })}
         </ul>
 
+        {scopes.includes("email") && (prompt.emailOptions?.length ?? 0) > 1 && (
+          <fieldset className="mt-4 space-y-2 rounded-2xl border border-border p-3 text-sm">
+            <legend className="px-1 text-xs font-medium text-muted-foreground">{t("auth.consent.emailPick")}</legend>
+            {prompt.emailOptions!.map((o) => (
+              <label key={o.id} className="flex cursor-pointer items-start gap-3">
+                <input
+                  type="radio"
+                  name="email-choice"
+                  className="mt-1 accent-primary"
+                  checked={(emailChoice ?? prompt.emailChoice ?? "primary") === o.id}
+                  onChange={() => setEmailChoice(o.id)}
+                />
+                <span className="min-w-0">
+                  <span className="block font-medium">{t(`auth.consent.email.${o.source}`)}</span>
+                  <span className="block break-all text-xs text-muted-foreground">{o.email}</span>
+                </span>
+              </label>
+            ))}
+          </fieldset>
+        )}
         {prompt.richIdentity && (
           <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-2xl border border-border p-3 text-sm">
             <Checkbox
