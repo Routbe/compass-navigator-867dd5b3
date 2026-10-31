@@ -45,3 +45,47 @@ describe("app-specific identifiers", () => {
     await expect(appSybilNullifier("short", "c", "h")).rejects.toThrow();
   });
 });
+
+import { decideForward, forwardAliasLocal, messageIdHash, parseForwardAddress, FORWARD_MAX_BYTES } from "./email-forwarding";
+
+describe("private relay forwarding", () => {
+  const base = {
+    rule: { status: "active" as const },
+    targetEmail: "jona@mail.be",
+    targetVerified: true,
+    fromAddress: "shop@example.com",
+    sizeBytes: 1000,
+    duplicate: false,
+    rateOk: true,
+  };
+  it("relay address is stable per app and differs between apps", async () => {
+    const a = await forwardAliasLocal("pairwise-subject-app-a-0001");
+    expect(a).toMatch(/^priv-[a-f0-9]{20}$/);
+    expect(await forwardAliasLocal("pairwise-subject-app-a-0001")).toBe(a);
+    expect(await forwardAliasLocal("pairwise-subject-app-b-0001")).not.toBe(a);
+  });
+  it("accepts only our own relay addresses", () => {
+    expect(parseForwardAddress("Shop <priv-0123456789abcdef0123@mail.rout.be>")).toBe("priv-0123456789abcdef0123");
+    expect(parseForwardAddress("priv-0123456789abcdef0123@other.be")).toBeNull();
+    expect(parseForwardAddress("jona@mail.rout.be")).toBeNull();
+  });
+  it("forwards to a verified address", () => {
+    expect(decideForward(base)).toEqual({ action: "forward" });
+  });
+  it("refuses unknown, paused and unverified targets", () => {
+    expect(decideForward({ ...base, rule: null })).toEqual({ action: "reject", reason: "unknown_alias" });
+    expect(decideForward({ ...base, rule: { status: "paused" } })).toEqual({ action: "reject", reason: "inactive" });
+    expect(decideForward({ ...base, targetVerified: false })).toEqual({ action: "reject", reason: "unverified_target" });
+  });
+  it("refuses loops, oversized mail, duplicates and floods", () => {
+    expect(decideForward({ ...base, fromAddress: "x@mail.rout.be" })).toEqual({ action: "reject", reason: "loop" });
+    expect(decideForward({ ...base, sizeBytes: FORWARD_MAX_BYTES + 1 })).toEqual({ action: "reject", reason: "too_large" });
+    expect(decideForward({ ...base, duplicate: true })).toEqual({ action: "reject", reason: "duplicate" });
+    expect(decideForward({ ...base, rateOk: false })).toEqual({ action: "reject", reason: "rate_limited" });
+  });
+  it("never stores the raw Message-ID", async () => {
+    const h = await messageIdHash("<abc@example.com>");
+    expect(h).toMatch(/^[a-f0-9]{64}$/);
+    expect(await messageIdHash("")).toBeNull();
+  });
+});
