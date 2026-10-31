@@ -41,7 +41,7 @@ export const Route = createFileRoute("/api_/public/email-forward")({
           return Response.json({ ok: true, ignored: "invalid_payload" });
         }
         const { deliverInbound } = await import("@/lib/oauth/email-forwarding.server");
-        const results = [];
+        const results: import("@/lib/oauth/email-forwarding.server").InboundResult[] = [];
         for (const it of parsed.items) {
           const html = it.RawHtmlBody ?? null;
           const text = it.RawTextBody ?? null;

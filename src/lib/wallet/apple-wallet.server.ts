@@ -8,7 +8,7 @@ import { applePassJson, type WalletSubject } from "./wallet-pass";
 const pem = (v: string | undefined) => (v ?? "").replace(/\\n/g, "\n").trim();
 
 async function sha1Hex(bytes: Uint8Array): Promise<string> {
-  const d = await crypto.subtle.digest("SHA-1", bytes);
+  const d = await crypto.subtle.digest("SHA-1", bytes as Uint8Array<ArrayBuffer>);
   return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
