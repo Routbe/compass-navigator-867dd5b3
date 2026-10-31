@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { CalendarPlus, MapPin } from "lucide-react";
+import { CalendarPlus, MapPin, Wallet } from "lucide-react";
+import { WalletDialog } from "@/components/wallet/WalletDialog";
 import { getPublicEvents } from "@/lib/event-engine.functions";
 import { eventIsOver, toCalendarItem, type PublicEvent } from "@/lib/event-engine";
 import { eventGoogleUrl, eventIcsDataUrl } from "@/lib/events";
@@ -30,6 +31,7 @@ function EventRoute() {
 function EventPage({ event }: { event?: PublicEvent }) {
   const { t } = useI18n();
   const [url, setUrl] = useState("");
+  const [walletOpen, setWalletOpen] = useState(false);
   useEffect(() => setUrl(window.location.href), []);
   return <main className="min-h-screen bg-background px-4 py-10 text-foreground"><div className="mx-auto max-w-xl space-y-6">
     <a href="/" className="font-display text-xl">ROUT</a>
@@ -42,7 +44,9 @@ function EventPage({ event }: { event?: PublicEvent }) {
         {event.ticketUrl && <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">Tickets</a>}
         <a href={eventIcsDataUrl(toCalendarItem(event))} download="rout-event.ics" className="inline-flex items-center gap-1 rounded-full border border-border px-4 py-2 text-sm"><CalendarPlus className="size-4" aria-hidden />{t("events.addCalendar")}</a>
         <a href={eventGoogleUrl(toCalendarItem(event))} target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-4 py-2 text-sm">Google</a>
+        <button type="button" onClick={() => setWalletOpen(true)} className="inline-flex items-center gap-1 rounded-full border border-border px-4 py-2 text-sm"><Wallet className="size-4" aria-hidden />{t("wallet.add")}</button>
       </div>
+      <WalletDialog open={walletOpen} onOpenChange={setWalletOpen} kind="event" id={event.slug} />
       {url && <figure className="flex flex-col items-center gap-2 pt-2"><QRCodeSVG value={url} size={160} level="M" bgColor="transparent" fgColor="currentColor" className="text-foreground" aria-label={t("events.scan")} /><figcaption className="text-xs text-muted-foreground">{t("events.scan")}</figcaption></figure>}
     </article>}
   </div></main>;

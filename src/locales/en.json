@@ -1520,5 +1520,14 @@
     "online": "Online on Steam",
     "playing": "{{name}} is playing",
     "label": "Steam profile"
-  }
+  },
+  "wallet.add": "Add to Wallet",
+  "wallet.title": "Add to Wallet",
+  "wallet.descProfile": "Keep this business card with its QR code on your phone.",
+  "wallet.descEvent": "Keep this event with its QR code on your phone.",
+  "wallet.apple": "Apple Wallet",
+  "wallet.google": "Google Wallet",
+  "wallet.unavailable": "Wallet passes are not available yet. Meanwhile, download the QR code or business card from the share menu.",
+  "wallet.partly": "Not every wallet is available yet.",
+  "wallet.failed": "The pass could not be created. Please try again later."
 }

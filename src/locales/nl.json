@@ -1520,5 +1520,14 @@
     "online": "Online op Steam",
     "playing": "{{name}} speelt nu",
     "label": "Steam-profiel"
-  }
+  },
+  "wallet.add": "Toevoegen aan Wallet",
+  "wallet.title": "Toevoegen aan Wallet",
+  "wallet.descProfile": "Bewaar dit visitekaartje met QR-code in je telefoon.",
+  "wallet.descEvent": "Bewaar dit evenement met QR-code in je telefoon.",
+  "wallet.apple": "Apple Wallet",
+  "wallet.google": "Google Wallet",
+  "wallet.unavailable": "Wallet-passes zijn nog niet beschikbaar. Download intussen de QR-code of het visitekaartje via het deelmenu.",
+  "wallet.partly": "Niet elke wallet is al beschikbaar.",
+  "wallet.failed": "De pass kon niet worden aangemaakt. Probeer het later opnieuw."
 }

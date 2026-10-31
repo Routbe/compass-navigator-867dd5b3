@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Copy, FileDown, ImageDown, Nfc, QrCode, Share2 } from "lucide-react";
+import { Copy, FileDown, ImageDown, Nfc, QrCode, Share2, Wallet } from "lucide-react";
+import { WalletDialog } from "@/components/wallet/WalletDialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +40,7 @@ export function ShareMenu({ url, handle, name, bio, avatarUrl, showNfc, qrStyle,
   const { t } = useTranslation();
   const [nfcOpen, setNfcOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
+  const [walletOpen, setWalletOpen] = useState(false);
   const qs = qrStyle ?? DEFAULT_PROFILE_QR_STYLE;
   const [svgSrc, setSvgSrc] = useState("");
   const [pngSrc, setPngSrc] = useState("");
@@ -119,6 +121,11 @@ export function ShareMenu({ url, handle, name, bio, avatarUrl, showNfc, qrStyle,
             <ImageDown className="mr-2 h-4 w-4" aria-hidden />  {t("profile.cardImage")} </DropdownMenuItem>
           <DropdownMenuItem disabled={!pngSrc} onSelect={run(() => downloadCardPdf(card()))}>
             <FileDown className="mr-2 h-4 w-4" aria-hidden />  {t("profile.cardPdf")} </DropdownMenuItem>
+          {handle && (
+            <DropdownMenuItem onSelect={() => setWalletOpen(true)}>
+              <Wallet className="mr-2 h-4 w-4" aria-hidden /> {t("wallet.add")}
+            </DropdownMenuItem>
+          )}
           {showNfc && (
             <>
               <DropdownMenuSeparator />
@@ -129,6 +136,7 @@ export function ShareMenu({ url, handle, name, bio, avatarUrl, showNfc, qrStyle,
         </DropdownMenuContent>
       </DropdownMenu>
       {showNfc && <NfcDialog open={nfcOpen} onOpenChange={setNfcOpen} />}
+      {handle && <WalletDialog open={walletOpen} onOpenChange={setWalletOpen} kind="profile" id={handle} />}
       <Dialog open={qrOpen} onOpenChange={setQrOpen}>
         <DialogContent className="flex max-h-[100dvh] w-[100vw] max-w-[100vw] flex-col items-center justify-center gap-4 border-0 sm:max-w-[min(90vw,90vh)] sm:rounded-2xl">
           <DialogHeader className="sr-only">
