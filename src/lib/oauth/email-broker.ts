@@ -1,12 +1,14 @@
 /** Per-app email choice ("Sovereign Email Broker"). Pure and browser-safe. */
 
-export type EmailOption = { id: string; source: "primary" | "alias"; aliasId: string | null; email: string; verified: boolean };
-export type EmailAssignment = { source: "primary" | "alias"; aliasId: string | null } | null;
+export type EmailSource = "primary" | "alias" | "relay";
+export type EmailOption = { id: string; source: EmailSource; aliasId: string | null; email: string; verified: boolean };
+export type EmailAssignment = { source: EmailSource; aliasId: string | null } | null;
 
-/** Primary first, then active aliases; duplicates removed. */
+/** Primary first, then active aliases, then the app's private relay (when given); duplicates removed. */
 export function emailOptions(
   primary: { email: string | null; verified: boolean },
   aliases: { id: string; alias: string; status: string }[],
+  relayAddress?: string | null,
 ): EmailOption[] {
   const out: EmailOption[] = [];
   const seen = new Set<string>();
@@ -19,11 +21,19 @@ export function emailOptions(
     seen.add(a.alias.toLowerCase());
     out.push({ id: a.id, source: "alias", aliasId: a.id, email: a.alias, verified: true });
   }
+  // The relay forwards only to a verified primary, so it is offered only then.
+  if (relayAddress && primary.email && primary.verified) {
+    out.push({ id: "relay", source: "relay", aliasId: null, email: relayAddress, verified: true });
+  }
   return out;
 }
 
 /** The email an app receives. A removed alias falls back to the primary address. */
 export function resolveAppEmail(assignment: EmailAssignment, options: EmailOption[]): EmailOption | null {
+  if (assignment?.source === "relay") {
+    const hit = options.find((o) => o.source === "relay");
+    if (hit) return hit;
+  }
   if (assignment?.source === "alias") {
     const hit = options.find((o) => o.source === "alias" && o.aliasId === assignment.aliasId);
     if (hit) return hit;
