@@ -200,3 +200,13 @@ Reuses `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` and `PSP_ENCRYPTION_KEY`. Add
 - `ROUT_AUDIT_SIGNING_SECRET` — HMAC key for daily audit checkpoints (`/api/public/cron/audit-checkpoint`).
 
 - `STEAM_WEB_API_KEY` — optional; Steam live card. Without it the card stays hidden.
+
+## Private e-mail relay (Login met ROUT)
+- `EMAIL_INBOUND_TOKEN` — shared token in the Brevo Inbound Parsing webhook URL: `https://<site>/api/public/email-forward?token=<value>`. Without it the endpoint answers 401.
+- `ROUT_FORWARD_EMAIL_DOMAIN` — optional; relay domain (default `mail.rout.be`). Its MX must point to Brevo inbound.
+- Uses `ROUT_PROVIDER_PAIRWISE_SECRET` to derive relay addresses and `BREVO_API_KEY` to forward.
+
+## Wallet passes
+- Apple: `APPLE_WALLET_PASS_TYPE_ID`, `APPLE_WALLET_TEAM_ID`, `APPLE_WALLET_CERT_PEM` (Pass Type ID certificate), `APPLE_WALLET_KEY_PEM` (its private key), optional `APPLE_WALLET_KEY_PASSPHRASE`, `APPLE_WALLET_WWDR_PEM` (Apple WWDR G4). PEM values may use `\n` escapes.
+- Google: `GOOGLE_WALLET_ISSUER_ID`, `GOOGLE_WALLET_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_WALLET_PRIVATE_KEY` (service account PKCS#8 key).
+- Missing or partial values switch that wallet off; the share menu shows a friendly fallback.
