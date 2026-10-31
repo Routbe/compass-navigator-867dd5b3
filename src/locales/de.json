@@ -1531,5 +1531,7 @@
   "wallet.partly": "Noch nicht jede Wallet ist verfügbar.",
   "wallet.failed": "Der Pass konnte nicht erstellt werden. Bitte später erneut versuchen.",
   "profile.upcomingEvents": "Kommende Events",
-  "profile.eventDetails": "Details"
+  "profile.eventDetails": "Details",
+  "type.steam": "Steam-Profil",
+  "type.steam.desc": "Teile dein Steam-Profil mit einem Scan."
 }

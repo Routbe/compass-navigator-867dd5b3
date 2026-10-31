@@ -1531,5 +1531,7 @@
   "wallet.partly": "Niet elke wallet is al beschikbaar.",
   "wallet.failed": "De pass kon niet worden aangemaakt. Probeer het later opnieuw.",
   "profile.upcomingEvents": "Aankomende evenementen",
-  "profile.eventDetails": "Details"
+  "profile.eventDetails": "Details",
+  "type.steam": "Steam-profiel",
+  "type.steam.desc": "Deel je Steam-profiel met één scan."
 }

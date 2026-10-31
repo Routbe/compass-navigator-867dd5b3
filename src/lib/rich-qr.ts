@@ -17,7 +17,8 @@ export type RichQRId =
   | "matrix"
   | "snapchat"
   | "discord"
-  | "linkedin";
+  | "linkedin"
+  | "steam";
 
 export interface RichField {
   key: string;
@@ -322,6 +323,18 @@ export const RICH_QR_TYPES: RichQRDefinition[] = [
       },
     ],
   },
+  {
+    id: "steam",
+    label: "Steam profile",
+    fields: [
+      {
+        key: "profile",
+        label: "Steam profile URL, custom ID or SteamID64",
+        labelNl: "Steam-profiel-URL, eigen ID of SteamID64",
+        placeholder: "https://steamcommunity.com/id/jona",
+      },
+    ],
+  },
 ];
 
 export const isRichType = (id: string): id is RichQRId => RICH_QR_TYPES.some((r) => r.id === id);
@@ -535,7 +548,33 @@ const HANDLE_TYPES = [
   "linkedin",
 ];
 
+const STEAM_ID64 = /^7656119\d{10}$/;
+const STEAM_VANITY = /^[A-Za-z0-9_-]{2,32}$/;
+
+/**
+ * Normalises Steam input to a canonical profile URL. Accepts
+ * steamcommunity.com/id/<custom> or /profiles/<SteamID64>, a bare SteamID64 or a
+ * bare custom ID. Anything else (other hosts, store links) returns "".
+ */
+export function buildSteamLink(v: Record<string, string>): string {
+  const raw = trimmed(v.profile);
+  if (!raw) return "";
+  if (STEAM_ID64.test(raw)) return `https://steamcommunity.com/profiles/${raw}`;
+  if (!raw.includes("/") && !raw.includes(".")) return STEAM_VANITY.test(raw) ? `https://steamcommunity.com/id/${raw}` : "";
+  try {
+    const u = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+    if (!/^(www\.)?steamcommunity\.com$/i.test(u.hostname)) return "";
+    const [kind, id] = u.pathname.split("/").filter(Boolean);
+    if (kind === "id" && id && STEAM_VANITY.test(id)) return `https://steamcommunity.com/id/${id}`;
+    if (kind === "profiles" && id && STEAM_ID64.test(id)) return `https://steamcommunity.com/profiles/${id}`;
+  } catch {
+    /* invalid URL */
+  }
+  return "";
+}
+
 export function buildRichPayload(id: string, values: Record<string, string>): string {
+  if (id === "steam") return buildSteamLink(values);
   if (id === "vcard") return buildVCard(values);
   if (id === "event") return buildEvent(values);
   if (id === "social") return buildSocialHub(values);
@@ -581,6 +620,10 @@ export function validateRich(id: string, values: Record<string, string>): Record
   }
   if (id === "meeting") {
     if (!trimmed(values.link)) errors.link = "Paste your Zoom, Meet or Teams link.";
+  }
+  if (id === "steam") {
+    if (!buildSteamLink(values))
+      errors.profile = "Use steamcommunity.com/id/… or steamcommunity.com/profiles/… (or a SteamID64).";
   }
   if (id === "applink") {
     if (!trimmed(values.ios) && !trimmed(values.android) && !trimmed(values.web))
