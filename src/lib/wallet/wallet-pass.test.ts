@@ -1,0 +1,28 @@
+import { describe, expect, it } from "vitest";
+import { applePassJson, googleSaveClaims, walletSerial, walletStatus } from "./wallet-pass";
+
+const event = { kind: "event" as const, id: "Summer Fest!", title: "Summer Fest", subtitle: "1 aug 2026", url: "https://rout.be/event/summer", startsAt: "2026-08-01T18:00:00Z", venue: "Gent" };
+
+describe("wallet passes", () => {
+  it("is off until every certificate value is present", () => {
+    expect(walletStatus({})).toEqual({ apple: false, google: false });
+    expect(walletStatus({ APPLE_WALLET_PASS_TYPE_ID: "pass.be.rout", APPLE_WALLET_TEAM_ID: "T" })).toEqual({ apple: false, google: false });
+    expect(walletStatus({ GOOGLE_WALLET_ISSUER_ID: "1", GOOGLE_WALLET_SERVICE_ACCOUNT_EMAIL: "a@b", GOOGLE_WALLET_PRIVATE_KEY: "k" }).google).toBe(true);
+  });
+  it("serials are safe and never collide between profiles and events", () => {
+    expect(walletSerial(event)).toBe("event-summer-fest-");
+    expect(walletSerial({ kind: "profile", id: "summer" })).not.toBe(walletSerial({ kind: "event", id: "summer" }));
+  });
+  it("Apple pass carries the page link as QR code and the event date", () => {
+    const p = applePassJson(event, { passTypeId: "pass.be.rout", teamId: "TEAM" });
+    expect(p.barcodes[0]!.message).toBe("https://rout.be/event/summer");
+    expect(p.relevantDate).toBe("2026-08-01T18:00:00Z");
+    expect(p.passTypeIdentifier).toBe("pass.be.rout");
+  });
+  it("Google pass is bound to the issuer and our own origin", () => {
+    const c = googleSaveClaims(event, { issuerId: "338", serviceAccountEmail: "sa@x.iam", origins: ["https://rout.be"] });
+    expect(c.payload.genericObjects[0]!.id.startsWith("338.")).toBe(true);
+    expect(c.payload.genericObjects[0]!.barcode.value).toBe("https://rout.be/event/summer");
+    expect(c.origins).toEqual(["https://rout.be"]);
+  });
+});

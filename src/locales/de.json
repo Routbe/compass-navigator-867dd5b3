@@ -1520,5 +1520,14 @@
     "online": "Online auf Steam",
     "playing": "{{name}} spielt",
     "label": "Steam-Profil"
-  }
+  },
+  "wallet.add": "Zu Wallet hinzufügen",
+  "wallet.title": "Zu Wallet hinzufügen",
+  "wallet.descProfile": "Speichere diese Visitenkarte mit QR-Code auf deinem Handy.",
+  "wallet.descEvent": "Speichere dieses Event mit QR-Code auf deinem Handy.",
+  "wallet.apple": "Apple Wallet",
+  "wallet.google": "Google Wallet",
+  "wallet.unavailable": "Wallet-Pässe sind noch nicht verfügbar. Lade bis dahin den QR-Code oder die Visitenkarte über das Teilen-Menü herunter.",
+  "wallet.partly": "Noch nicht jede Wallet ist verfügbar.",
+  "wallet.failed": "Der Pass konnte nicht erstellt werden. Bitte später erneut versuchen."
 }
