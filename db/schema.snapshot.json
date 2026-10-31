@@ -2410,6 +2410,111 @@
     },
     {
       "schema": "public",
+      "name": "app_email_assignments",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "notNull": true,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "client_id",
+          "type": "text",
+          "notNull": true,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "source",
+          "type": "text",
+          "notNull": true,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "alias_id",
+          "type": "uuid",
+          "notNull": false,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "assigned_email",
+          "type": "text",
+          "notNull": true,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "notNull": true,
+          "default": "now()",
+          "identity": null,
+          "generated": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "app_email_assignments_assigned_email_check",
+          "kind": "c",
+          "def": "CHECK (((char_length(assigned_email) >= 3) AND (char_length(assigned_email) <= 320)))"
+        },
+        {
+          "name": "app_email_assignments_check",
+          "kind": "c",
+          "def": "CHECK (((source = 'alias'::text) = (alias_id IS NOT NULL)))"
+        },
+        {
+          "name": "app_email_assignments_client_id_check",
+          "kind": "c",
+          "def": "CHECK (((char_length(client_id) >= 1) AND (char_length(client_id) <= 200)))"
+        },
+        {
+          "name": "app_email_assignments_pkey",
+          "kind": "p",
+          "def": "PRIMARY KEY (user_id, client_id)"
+        },
+        {
+          "name": "app_email_assignments_source_check",
+          "kind": "c",
+          "def": "CHECK ((source = ANY (ARRAY['primary'::text, 'alias'::text])))"
+        }
+      ],
+      "indexes": [],
+      "triggers": [],
+      "rls": true,
+      "forceRls": false,
+      "policies": [
+        {
+          "name": "rout_scope",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "cmd": "ALL",
+          "using": "(user_id = rout_current_user_id())",
+          "check": "(user_id = rout_current_user_id())"
+        }
+      ],
+      "grants": {
+        "rout_app": [
+          "DELETE",
+          "INSERT",
+          "SELECT",
+          "UPDATE"
+        ]
+      }
+    },
+    {
+      "schema": "public",
       "name": "approved_handles",
       "columns": [
         {
@@ -9265,6 +9370,250 @@
       "grants": {
         "rout_app": [
           "DELETE",
+          "INSERT",
+          "SELECT",
+          "UPDATE"
+        ]
+      }
+    },
+    {
+      "schema": "public",
+      "name": "oauth_email_deliveries",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "notNull": true,
+          "default": "gen_random_uuid()",
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "rule_id",
+          "type": "uuid",
+          "notNull": false,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "notNull": false,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "notNull": true,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "notNull": false,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "size_bytes",
+          "type": "integer",
+          "notNull": false,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "message_id_hash",
+          "type": "text",
+          "notNull": false,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "notNull": true,
+          "default": "now()",
+          "identity": null,
+          "generated": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "oauth_email_deliveries_message_id_hash_check",
+          "kind": "c",
+          "def": "CHECK (((message_id_hash IS NULL) OR (message_id_hash ~ '^[a-f0-9]{64}$'::text)))"
+        },
+        {
+          "name": "oauth_email_deliveries_pkey",
+          "kind": "p",
+          "def": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "oauth_email_deliveries_reason_check",
+          "kind": "c",
+          "def": "CHECK (((reason IS NULL) OR (char_length(reason) <= 40)))"
+        },
+        {
+          "name": "oauth_email_deliveries_rule_id_fkey",
+          "kind": "f",
+          "def": "FOREIGN KEY (rule_id) REFERENCES oauth_email_forwarding_rules(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "oauth_email_deliveries_size_bytes_check",
+          "kind": "c",
+          "def": "CHECK (((size_bytes IS NULL) OR (size_bytes >= 0)))"
+        },
+        {
+          "name": "oauth_email_deliveries_status_check",
+          "kind": "c",
+          "def": "CHECK ((status = ANY (ARRAY['forwarded'::text, 'rejected'::text, 'failed'::text])))"
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX oauth_email_deliveries_rule_time ON public.oauth_email_deliveries USING btree (rule_id, created_at DESC)",
+        "CREATE UNIQUE INDEX oauth_email_deliveries_dedupe ON public.oauth_email_deliveries USING btree (rule_id, message_id_hash) WHERE ((message_id_hash IS NOT NULL) AND (status = 'forwarded'::text))"
+      ],
+      "triggers": [],
+      "rls": true,
+      "forceRls": false,
+      "policies": [
+        {
+          "name": "rout_scope",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "cmd": "ALL",
+          "using": "(user_id = rout_current_user_id())",
+          "check": "(user_id = rout_current_user_id())"
+        }
+      ],
+      "grants": {
+        "rout_app": [
+          "INSERT",
+          "SELECT"
+        ]
+      }
+    },
+    {
+      "schema": "public",
+      "name": "oauth_email_forwarding_rules",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "notNull": true,
+          "default": "gen_random_uuid()",
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "notNull": true,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "client_id",
+          "type": "text",
+          "notNull": true,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "alias_local",
+          "type": "text",
+          "notNull": true,
+          "default": null,
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "notNull": true,
+          "default": "'active'::text",
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "notNull": true,
+          "default": "now()",
+          "identity": null,
+          "generated": null
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "notNull": true,
+          "default": "now()",
+          "identity": null,
+          "generated": null
+        }
+      ],
+      "constraints": [
+        {
+          "name": "oauth_email_forwarding_rules_alias_local_check",
+          "kind": "c",
+          "def": "CHECK ((alias_local ~ '^priv-[a-f0-9]{20}$'::text))"
+        },
+        {
+          "name": "oauth_email_forwarding_rules_alias_local_key",
+          "kind": "u",
+          "def": "UNIQUE (alias_local)"
+        },
+        {
+          "name": "oauth_email_forwarding_rules_client_id_check",
+          "kind": "c",
+          "def": "CHECK (((char_length(client_id) >= 1) AND (char_length(client_id) <= 200)))"
+        },
+        {
+          "name": "oauth_email_forwarding_rules_pkey",
+          "kind": "p",
+          "def": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "oauth_email_forwarding_rules_status_check",
+          "kind": "c",
+          "def": "CHECK ((status = ANY (ARRAY['active'::text, 'paused'::text, 'revoked'::text])))"
+        },
+        {
+          "name": "oauth_email_forwarding_rules_user_id_client_id_key",
+          "kind": "u",
+          "def": "UNIQUE (user_id, client_id)"
+        }
+      ],
+      "indexes": [],
+      "triggers": [],
+      "rls": true,
+      "forceRls": false,
+      "policies": [
+        {
+          "name": "rout_scope",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "cmd": "ALL",
+          "using": "(user_id = rout_current_user_id())",
+          "check": "(user_id = rout_current_user_id())"
+        }
+      ],
+      "grants": {
+        "rout_app": [
           "INSERT",
           "SELECT",
           "UPDATE"
