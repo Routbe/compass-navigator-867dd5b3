@@ -12,7 +12,7 @@ export async function loadWalletSubject(kind: WalletKind, id: string, origin: st
       id: handle,
       title: String(p["display_name"] || `@${handle}`),
       subtitle: `@${handle}`,
-      url: `${origin}/u/${encodeURIComponent(handle)}`,
+      url: `${origin}/${encodeURIComponent(handle)}`,
     };
   }
   const { readPublicEvents } = await import("@/lib/event-engine.server");
