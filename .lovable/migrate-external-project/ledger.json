@@ -1,5 +1,5 @@
 {
-  "source": "github:Routbe/compass-navigator-b64ec481",
+  "source": "github:Routbe/compass-navigator-500baf53",
   "decision": "User chose 1:1 copy: keep Neon database and Better Auth (no move to Lovable Cloud).",
   "capabilities": [
     {
